@@ -1,5 +1,5 @@
 require "logstash/devutils/rspec/spec_helper"
-require "logstash/filters/example"
+require "logstash/filters/tld"
 
 describe LogStash::Filters::Tld do
   describe "Set to TLD" do
@@ -32,5 +32,22 @@ describe LogStash::Filters::Tld do
       insist { subject["tld"]["domain"] } == "google.com"
       insist { subject["tld"]["subdomain"] } == nil
     end
+
+    sample("message" => "google.co.uk") do
+      insist { subject["tld"]["tld"] } == "co.uk"
+      insist { subject["tld"]["sld"] } == "google"
+      insist { subject["tld"]["trd"] } == nil
+      insist { subject["tld"]["domain"] } == "google.co.uk"
+      insist { subject["tld"]["subdomain"] } == nil
+    end
+
+    sample("message" => "www.google.com") do
+      insist { subject["tld"]["tld"] } == "com"
+      insist { subject["tld"]["sld"] } == "google"
+      insist { subject["tld"]["trd"] } == "www"
+      insist { subject["tld"]["domain"] } == "google.com"
+      insist { subject["tld"]["subdomain"] } == "www.google.com"
+    end
+
   end
 end
