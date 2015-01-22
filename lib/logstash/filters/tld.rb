@@ -20,8 +20,8 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
   config_name "tld"
   milestone 1
   
-  # The field to parse
-  config :field, :validate => :string, :default => "message"
+  # The source field to parse
+  config :source, :validate => :string, :default => "message"
 
   # The target field to place all the data
   config :target, :validate => :string, :default => "tld"
@@ -35,8 +35,8 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
   public
   def filter(event)
 
-    if @field and PublicSuffix.valid?(event[@field])
-      domain = PublicSuffix.parse(event[@field])
+    if @field and PublicSuffix.valid?(event[@source])
+      domain = PublicSuffix.parse(event[@source])
       # Replace the event message with our message as configured in the
       # config file.
       event[@target] = Hash.new
