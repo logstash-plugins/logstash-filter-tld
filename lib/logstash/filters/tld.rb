@@ -46,9 +46,9 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
       event[@target]['domain'] = domain.domain
       event[@target]['subdomain'] = domain.subdomain
 
-    end
+      # filter_matched should go in the last line of our successful code
+      filter_matched(event)
 
-    # filter_matched should go in the last line of our successful code
-    filter_matched(event)
+    end
   end # def filter
 end # class LogStash::Filters::Example
