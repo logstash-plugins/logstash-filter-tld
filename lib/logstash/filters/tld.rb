@@ -35,7 +35,7 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
   public
   def filter(event)
 
-    if @field and PublicSuffix.valid?(event[@source])
+    if @source and PublicSuffix.valid?(event[@source])
       domain = PublicSuffix.parse(event[@source])
       # Replace the event message with our message as configured in the
       # config file.
