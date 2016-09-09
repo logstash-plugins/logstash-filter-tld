@@ -26,27 +26,27 @@ describe LogStash::Filters::Tld do
 
 
     sample("message" => "google.com") do
-      insist { subject["tld"]["tld"] } == "com"
-      insist { subject["tld"]["sld"] } == "google"
-      insist { subject["tld"]["trd"] } == nil
-      insist { subject["tld"]["domain"] } == "google.com"
-      insist { subject["tld"]["subdomain"] } == nil
+      insist { subject.get("tld")["tld"] } == "com"
+      insist { subject.get("tld")["sld"] } == "google"
+      insist { subject.get("tld")["trd"] } == nil
+      insist { subject.get("tld")["domain"] } == "google.com"
+      insist { subject.get("tld")["subdomain"] } == nil
     end
 
     sample("message" => "google.co.uk") do
-      insist { subject["tld"]["tld"] } == "co.uk"
-      insist { subject["tld"]["sld"] } == "google"
-      insist { subject["tld"]["trd"] } == nil
-      insist { subject["tld"]["domain"] } == "google.co.uk"
-      insist { subject["tld"]["subdomain"] } == nil
+      insist { subject.get("tld")["tld"] } == "co.uk"
+      insist { subject.get("tld")["sld"] } == "google"
+      insist { subject.get("tld")["trd"] } == nil
+      insist { subject.get("tld")["domain"] } == "google.co.uk"
+      insist { subject.get("tld")["subdomain"] } == nil
     end
 
     sample("message" => "www.google.com") do
-      insist { subject["tld"]["tld"] } == "com"
-      insist { subject["tld"]["sld"] } == "google"
-      insist { subject["tld"]["trd"] } == "www"
-      insist { subject["tld"]["domain"] } == "google.com"
-      insist { subject["tld"]["subdomain"] } == "www.google.com"
+      insist { subject.get("tld")["tld"] } == "com"
+      insist { subject.get("tld")["sld"] } == "google"
+      insist { subject.get("tld")["trd"] } == "www"
+      insist { subject.get("tld")["domain"] } == "google.com"
+      insist { subject.get("tld")["subdomain"] } == "www.google.com"
     end
 
   end

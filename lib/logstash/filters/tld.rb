@@ -18,7 +18,6 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
   # }
   #
   config_name "tld"
-  milestone 1
   
   # The source field to parse
   config :source, :validate => :string, :default => "message"
@@ -35,16 +34,17 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
   public
   def filter(event)
 
-    if @source and PublicSuffix.valid?(event[@source])
-      domain = PublicSuffix.parse(event[@source])
+    if @source and PublicSuffix.valid?(event.get(@source))
+      domain = PublicSuffix.parse(event.get(@source))
       # Replace the event message with our message as configured in the
       # config file.
-      event[@target] = Hash.new
-      event[@target]['tld'] = domain.tld
-      event[@target]['sld'] = domain.sld
-      event[@target]['trd'] = domain.trd
-      event[@target]['domain'] = domain.domain
-      event[@target]['subdomain'] = domain.subdomain
+      h = Hash.new
+      h['tld'] = domain.tld
+      h['sld'] = domain.sld
+      h['trd'] = domain.trd
+      h['domain'] = domain.domain
+      h['subdomain'] = domain.subdomain
+      event.set(@target, h)
 
       # filter_matched should go in the last line of our successful code
       filter_matched(event)
