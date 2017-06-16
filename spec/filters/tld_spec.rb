@@ -2,7 +2,7 @@ require "logstash/devutils/rspec/spec_helper"
 require "logstash/filters/tld"
 
 describe LogStash::Filters::Tld do
-  describe "Set to TLD" do
+  describe "default TLD config" do
     config <<-CONFIG
       filter {
         tld {
@@ -49,5 +49,31 @@ describe LogStash::Filters::Tld do
       insist { subject.get("tld")["subdomain"] } == "www.google.com"
     end
 
+    sample("message" => "example.s3.amazonaws.com") do
+      insist { subject.get("tld")["tld"] } == "com"
+      insist { subject.get("tld")["sld"] } == "amazonaws"
+      insist { subject.get("tld")["trd"] } == "example.s3"
+      insist { subject.get("tld")["domain"] } == "amazonaws.com"
+      insist { subject.get("tld")["subdomain"] } == "example.s3.amazonaws.com"
+    end
+
+  end
+
+  describe "enabling private domains" do
+    config <<-CONFIG
+      filter {
+        tld {
+          private_domains => true
+        }
+      }
+    CONFIG
+
+    sample("message" => "example.s3.amazonaws.com") do
+      insist { subject.get("tld")["tld"] } == "s3.amazonaws.com"
+      insist { subject.get("tld")["sld"] } == "example"
+      insist { subject.get("tld")["trd"] } == nil
+      insist { subject.get("tld")["domain"] } == "example.s3.amazonaws.com"
+      insist { subject.get("tld")["subdomain"] } == nil
+    end
   end
 end

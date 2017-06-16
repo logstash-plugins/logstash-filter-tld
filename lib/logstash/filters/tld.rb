@@ -2,10 +2,32 @@
 require "logstash/filters/base"
 require "logstash/namespace"
 
-# This example filter will replace the contents of the default 
-# message field with whatever you specify in the configuration.
+# This filter is a domain name parser based on the https://publicsuffix.org/[Public Suffix List]
+# for more information on this ruby parser, see https://github.com/weppos/publicsuffix-ruby
 #
-# It is only intended to be used as an example.
+# by default, parsing "example.s3.amazonaws.com" would yield:
+#
+# [source,json]
+# ----------------------------------
+# "tld": {
+#   "trd": "example.s3",
+#   "domain": "amazonaws.com",
+#   "subdomain": "example.s3.amazonaws.com",
+#   "sld": "amazonaws",
+#   "tld": "com"
+# }
+# ----------------------------------
+#
+# setting `private_domains => true` enables private (non-ICANN) domain parsing:
+#
+# [source,json]
+# ----------------------------------
+# "tld": {
+#   "domain": "example.s3.amazonaws.com",
+#   "sld": "example",
+#   "tld": "s3.amazonaws.com"
+# }
+# ----------------------------------
 class LogStash::Filters::Tld < LogStash::Filters::Base
 
   # Setting the config_name here is required. This is how you
@@ -18,17 +40,21 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
   # }
   #
   config_name "tld"
-  
+
   # The source field to parse
   config :source, :validate => :string, :default => "message"
 
-  # The target field to place all the data
+  # The target field to place tld fields
   config :target, :validate => :string, :default => "tld"
+
+  # Allows private (non-ICANN) domain parsing
+  config :private_domains, :validate => :boolean, :default => false
 
   public
   def register
-    # Add instance variables 
+    # Add instance variables
     require 'public_suffix'
+    PublicSuffix::List.private_domains = @private_domains
   end # def register
 
   public
