@@ -20,10 +20,32 @@ include::{include_path}/plugin_header.asciidoc[]
 
 ==== Description
 
-This example filter will replace the contents of the default 
-message field with whatever you specify in the configuration.
+This filter is a domain name parser based on the https://publicsuffix.org/[Public Suffix List]
+for more information on this ruby parser, see https://github.com/weppos/publicsuffix-ruby
 
-It is only intended to be used as an example.
+# by default, parsing "images.google.com" would yield:
+#
+# [source,json]
+# ----------------------------------
+# "tld": {
+#   "trd": "images",
+#   "domain": "google.com",
+#   "subdomain": "images.google.com",
+#   "sld": "google",
+#   "tld": "com"
+# }
+# ----------------------------------
+#
+# setting `ignore_private => false` enables private (non-ICANN) domain parsing:
+#
+# [source,json]
+# ----------------------------------
+# "tld": {
+#   "tld": "blogspot.com",
+#   "sld": "example",
+#   "domain": "example.blogspot.com"
+# }
+# ----------------------------------
 
 [id="plugins-{type}s-{plugin}-options"]
 ==== Tld Filter Configuration Options
@@ -35,6 +57,7 @@ This plugin supports the following configuration options plus the <<plugins-{typ
 |Setting |Input type|Required
 | <<plugins-{type}s-{plugin}-source>> |<<string,string>>|No
 | <<plugins-{type}s-{plugin}-target>> |<<string,string>>|No
+| <<plugins-{type}s-{plugin}-ignore_private>> |<<boolean,boolean>>|Yes
 |=======================================================================
 
 Also see <<plugins-{type}s-common-options>> for a list of options supported by all
@@ -43,7 +66,7 @@ filter plugins.
 &nbsp;
 
 [id="plugins-{type}s-{plugin}-source"]
-===== `source` 
+===== `source`
 
   * Value type is <<string,string>>
   * Default value is `"message"`
@@ -60,12 +83,20 @@ filter {
 The source field to parse
 
 [id="plugins-{type}s-{plugin}-target"]
-===== `target` 
+===== `target`
 
   * Value type is <<string,string>>
   * Default value is `"tld"`
 
 The target field to place all the data
+
+[id="plugins-{type}s-{plugin}-ignore_private"]
+===== `ignore_private`
+
+  * Value type is <<boolean,boolean>>
+  * Default value is `"true"`
+
+Allows private (non-ICANN) domain parsing
 
 
 
