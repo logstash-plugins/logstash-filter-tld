@@ -49,30 +49,29 @@ describe LogStash::Filters::Tld do
       insist { subject.get("tld")["subdomain"] } == "www.google.com"
     end
 
-    sample("message" => "example.s3.amazonaws.com") do
+    sample("message" => "example.blogspot.com") do
       insist { subject.get("tld")["tld"] } == "com"
-      insist { subject.get("tld")["sld"] } == "amazonaws"
-      insist { subject.get("tld")["trd"] } == "example.s3"
-      insist { subject.get("tld")["domain"] } == "amazonaws.com"
-      insist { subject.get("tld")["subdomain"] } == "example.s3.amazonaws.com"
+      insist { subject.get("tld")["sld"] } == "blogspot"
+      insist { subject.get("tld")["trd"] } == "example"
+      insist { subject.get("tld")["domain"] } == "blogspot.com"
+      insist { subject.get("tld")["subdomain"] } == "example.blogspot.com"
     end
-
   end
 
-  describe "enabling private domains" do
+  describe "default TLD config" do
     config <<-CONFIG
       filter {
         tld {
-          private_domains => true
+          ignore_private => false
         }
       }
     CONFIG
 
-    sample("message" => "example.s3.amazonaws.com") do
-      insist { subject.get("tld")["tld"] } == "s3.amazonaws.com"
+    sample("message" => "example.blogspot.com") do
+      insist { subject.get("tld")["tld"] } == "blogspot.com"
       insist { subject.get("tld")["sld"] } == "example"
       insist { subject.get("tld")["trd"] } == nil
-      insist { subject.get("tld")["domain"] } == "example.s3.amazonaws.com"
+      insist { subject.get("tld")["domain"] } == "example.blogspot.com"
       insist { subject.get("tld")["subdomain"] } == nil
     end
   end

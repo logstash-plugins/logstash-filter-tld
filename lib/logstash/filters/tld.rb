@@ -18,7 +18,7 @@ require "logstash/namespace"
 # }
 # ----------------------------------
 #
-# setting `private_domains => true` enables private (non-ICANN) domain parsing:
+# setting `ignore_private => false` enables private (non-ICANN) domain parsing:
 #
 # [source,json]
 # ----------------------------------
@@ -48,22 +48,21 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
   config :target, :validate => :string, :default => "tld"
 
   # Allows private (non-ICANN) domain parsing
-  config :private_domains, :validate => :boolean, :default => false
+  config :ignore_private, :validate => :boolean, :default => true
 
   public
   def register
     # Add instance variables
     require 'public_suffix'
-    PublicSuffix::List.private_domains = @private_domains
+    PublicSuffix::List.private_domains = false
   end # def register
 
   public
   def filter(event)
 
-    if @source and PublicSuffix.valid?(event.get(@source))
-      domain = PublicSuffix.parse(event.get(@source))
-      # Replace the event message with our message as configured in the
-      # config file.
+    if @source and PublicSuffix.valid?(event.get(@source), ignore_private: @ignore_private)
+      domain = PublicSuffix.parse(event.get(@source), ignore_private: @ignore_private)
+      # domain = PublicSuffix.parse(event.get(@source))
       h = Hash.new
       h['tld'] = domain.tld
       h['sld'] = domain.sld

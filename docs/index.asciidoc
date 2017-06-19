@@ -37,7 +37,7 @@ Using filter defaults, parsing `example.blogspot.com` would yield:
 }
 ----------------------------------
 
-setting `ignore_private => false` enables private (non-ICANN) domain parsing.
+setting `ignore_private` to `false` enables private (non-ICANN) domain parsing.
 See the https://publicsuffix.org/list/public_suffix_list.dat[the public suffix list] for details on private/public domains.
 
 Enabling private domain parsing, `example.blogspot.com` would now yield:
@@ -98,7 +98,7 @@ The target field to place all the data
 ===== `ignore_private`
 
   * Value type is <<boolean,boolean>>
-  * Default value is `"true"`
+  * Default value is `true`
 
 Allows private (non-ICANN) domain parsing
 
