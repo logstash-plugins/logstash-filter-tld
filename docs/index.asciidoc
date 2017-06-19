@@ -23,29 +23,29 @@ include::{include_path}/plugin_header.asciidoc[]
 This filter is a domain name parser based on the https://publicsuffix.org/[Public Suffix List]
 for more information on this ruby parser, see https://github.com/weppos/publicsuffix-ruby
 
-# by default, parsing "images.google.com" would yield:
-#
-# [source,json]
-# ----------------------------------
-# "tld": {
-#   "trd": "images",
-#   "domain": "google.com",
-#   "subdomain": "images.google.com",
-#   "sld": "google",
-#   "tld": "com"
-# }
-# ----------------------------------
-#
-# setting `ignore_private => false` enables private (non-ICANN) domain parsing:
-#
-# [source,json]
-# ----------------------------------
-# "tld": {
-#   "tld": "blogspot.com",
-#   "sld": "example",
-#   "domain": "example.blogspot.com"
-# }
-# ----------------------------------
+by default, parsing "images.google.com" would yield:
+
+[source,json]
+----------------------------------
+"tld": {
+ "trd": "images",
+ "domain": "google.com",
+ "subdomain": "images.google.com",
+ "sld": "google",
+ "tld": "com"
+}
+----------------------------------
+
+setting `ignore_private => false` enables private (non-ICANN) domain parsing:
+
+[source,json]
+----------------------------------
+"tld": {
+ "tld": "blogspot.com",
+ "sld": "example",
+ "domain": "example.blogspot.com"
+}
+----------------------------------
 
 [id="plugins-{type}s-{plugin}-options"]
 ==== Tld Filter Configuration Options
