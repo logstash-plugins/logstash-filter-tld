@@ -23,7 +23,7 @@ include::{include_path}/plugin_header.asciidoc[]
 This filter is a domain name parser based on the https://publicsuffix.org/[Public Suffix List]
 for more information on this ruby parser, see https://github.com/weppos/publicsuffix-ruby
 
-by default, parsing "images.google.com" would yield:
+using defaults, parsing `images.google.com` would yield:
 
 [source,json]
 ----------------------------------
@@ -36,7 +36,10 @@ by default, parsing "images.google.com" would yield:
 }
 ----------------------------------
 
-setting `ignore_private => false` enables private (non-ICANN) domain parsing:
+setting `ignore_private => false` enables private (non-ICANN) domain parsing.
+See the https://publicsuffix.org/list/public_suffix_list.dat[the public suffix list] for details on private/public domains
+
+Using `ignore_private => false` enables private TLDs.  Parsing `example.blogspot.com` would yield:
 
 [source,json]
 ----------------------------------
