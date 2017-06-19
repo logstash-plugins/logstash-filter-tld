@@ -20,10 +20,11 @@ include::{include_path}/plugin_header.asciidoc[]
 
 ==== Description
 
-This filter is a domain name parser based on the https://publicsuffix.org/[Public Suffix List]
-for more information on this ruby parser, see https://github.com/weppos/publicsuffix-ruby
+This filter is a domain name parser based on the https://publicsuffix.org/[Public Suffix List].
 
-using defaults, parsing `exampe.blogspot.com` would yield:
+For more information on this ruby parser, see https://github.com/weppos/publicsuffix-ruby
+
+Using filter defaults, parsing `example.blogspot.com` would yield:
 
 [source,json]
 ----------------------------------
@@ -37,9 +38,9 @@ using defaults, parsing `exampe.blogspot.com` would yield:
 ----------------------------------
 
 setting `ignore_private => false` enables private (non-ICANN) domain parsing.
-See the https://publicsuffix.org/list/public_suffix_list.dat[the public suffix list] for details on private/public domains
+See the https://publicsuffix.org/list/public_suffix_list.dat[the public suffix list] for details on private/public domains.
 
-Parsing the private domain of `example.blogspot.com` would yield:
+Enabling private domain parsing, `example.blogspot.com` would now yield:
 
 [source,json]
 ----------------------------------
