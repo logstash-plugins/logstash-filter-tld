@@ -47,7 +47,7 @@ describe LogStash::Filters::Tld do
     config <<-CONFIG
       filter {
         tld {
-          ignore_private => false
+          parse_private => true
         }
       }
     CONFIG
