@@ -63,7 +63,7 @@ This plugin supports the following configuration options plus the <<plugins-{typ
 |Setting |Input type|Required
 | <<plugins-{type}s-{plugin}-source>> |<<string,string>>|No
 | <<plugins-{type}s-{plugin}-target>> |<<string,string>>|No
-| <<plugins-{type}s-{plugin}-ignore_private>> |<<boolean,boolean>>|Yes
+| <<plugins-{type}s-{plugin}-parse_private>> |<<boolean,boolean>>|No
 |=======================================================================
 
 Also see <<plugins-{type}s-common-options>> for a list of options supported by all
@@ -96,11 +96,11 @@ The source field to parse
 
 The target field to place all the data
 
-[id="plugins-{type}s-{plugin}-ignore_private"]
-===== `ignore_private`
+[id="plugins-{type}s-{plugin}-parse_private"]
+===== `parse_private`
 
   * Value type is <<boolean,boolean>>
-  * Default value is `true`
+  * Default value is `false`
 
 Allows private (non-ICANN) domain parsing
 
