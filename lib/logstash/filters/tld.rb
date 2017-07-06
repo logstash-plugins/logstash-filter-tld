@@ -14,20 +14,22 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
   config :target, :validate => :string, :default => "tld"
 
   # Allows private (non-ICANN) domain parsing
-  config :ignore_private, :validate => :boolean, :default => true
+  config :parse_private, :validate => :boolean, :default => false
 
   public
   def register
     # Add instance variables
     require 'public_suffix'
+    # unfortunately public_suffix 1.4.6 requires this setting to be global
+    PublicSuffix::List.private_domains = @parse_private
   end # def register
 
   public
   def filter(event)
 
-    if @source and PublicSuffix.valid?(event.get(@source), ignore_private: @ignore_private)
-      domain = PublicSuffix.parse(event.get(@source), ignore_private: @ignore_private)
-      # domain = PublicSuffix.parse(event.get(@source))
+    if @source and PublicSuffix.valid?(event.get(@source))
+      domain = PublicSuffix.parse(event.get(@source))
+
       h = Hash.new
       h['tld'] = domain.tld
       h['sld'] = domain.sld
@@ -36,9 +38,7 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
       h['subdomain'] = domain.subdomain
       event.set(@target, h)
 
-      # filter_matched should go in the last line of our successful code
       filter_matched(event)
-
     end
   end # def filter
 end # class LogStash::Filters::Example
