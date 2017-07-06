@@ -37,8 +37,10 @@ Using filter defaults, parsing `example.blogspot.com` would yield:
 }
 ----------------------------------
 
-setting `ignore_private` to `false` enables private (non-ICANN) domain parsing.
+setting `parse_private` to `true` enables private (non-ICANN) domain parsing.
 See the https://publicsuffix.org/list/public_suffix_list.dat[the public suffix list] for details on private/public domains.
+
+NOTE: parse_private is a global filter setting.  If you use this tld filter multiple times in a filter, setting parse_private to true will make this setting true for all filter instances.
 
 Enabling private domain parsing, `example.blogspot.com` would now yield:
 
