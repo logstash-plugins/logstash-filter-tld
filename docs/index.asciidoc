@@ -20,10 +20,38 @@ include::{include_path}/plugin_header.asciidoc[]
 
 ==== Description
 
-This example filter will replace the contents of the default 
-message field with whatever you specify in the configuration.
+This filter is a domain name parser based on the https://publicsuffix.org/[Public Suffix List].
 
-It is only intended to be used as an example.
+For more information on this ruby parser, see https://github.com/weppos/publicsuffix-ruby
+
+Using filter defaults, parsing `example.blogspot.com` would yield:
+
+[source,json]
+----------------------------------
+"tld": {
+ "tld": "com",
+ "sld": "blogspot",
+ "trd": "example",
+ "domain": "blogspot.com",
+ "subdomain": "example.blogspot.com"
+}
+----------------------------------
+
+setting `parse_private` to `true` enables private (non-ICANN) domain parsing.
+See the https://publicsuffix.org/list/public_suffix_list.dat[the public suffix list] for details on private/public domains.
+
+NOTE: parse_private is a global filter setting.  If you use this tld filter multiple times in a filter, setting parse_private to true will make this setting true for all filter instances.
+
+Enabling private domain parsing, `example.blogspot.com` would now yield:
+
+[source,json]
+----------------------------------
+"tld": {
+ "tld": "blogspot.com",
+ "sld": "example",
+ "domain": "example.blogspot.com"
+}
+----------------------------------
 
 [id="plugins-{type}s-{plugin}-options"]
 ==== Tld Filter Configuration Options
@@ -35,6 +63,7 @@ This plugin supports the following configuration options plus the <<plugins-{typ
 |Setting |Input type|Required
 | <<plugins-{type}s-{plugin}-source>> |<<string,string>>|No
 | <<plugins-{type}s-{plugin}-target>> |<<string,string>>|No
+| <<plugins-{type}s-{plugin}-parse_private>> |<<boolean,boolean>>|No
 |=======================================================================
 
 Also see <<plugins-{type}s-{plugin}-common-options>> for a list of options supported by all
@@ -43,7 +72,7 @@ filter plugins.
 &nbsp;
 
 [id="plugins-{type}s-{plugin}-source"]
-===== `source` 
+===== `source`
 
   * Value type is <<string,string>>
   * Default value is `"message"`
@@ -60,12 +89,20 @@ filter {
 The source field to parse
 
 [id="plugins-{type}s-{plugin}-target"]
-===== `target` 
+===== `target`
 
   * Value type is <<string,string>>
   * Default value is `"tld"`
 
 The target field to place all the data
+
+[id="plugins-{type}s-{plugin}-parse_private"]
+===== `parse_private`
+
+  * Value type is <<boolean,boolean>>
+  * Default value is `false`
+
+Allows private (non-ICANN) domain parsing
 
 
 
