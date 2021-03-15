@@ -1,3 +1,6 @@
+## 3.0.4
+  - Honor ECS and add top_level_domain
+
 ## 3.0.3
   - Update gemspec summary
 
