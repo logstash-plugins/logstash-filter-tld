@@ -1,4 +1,4 @@
-## 3.0.4
+## 3.1.1
   - Honor ECS and add top_level_domain
 
 ## 3.0.3
