@@ -44,6 +44,7 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
       h['trd'] = domain.trd
       h['domain'] = domain.domain
       h['subdomain'] = domain.subdomain
+      h['top_level_domain'] = domain.tld
       event.set(@target, h)
 
       # filter_matched should go in the last line of our successful code

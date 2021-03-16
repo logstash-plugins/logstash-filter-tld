@@ -28,6 +28,7 @@ describe LogStash::Filters::Tld do
 
     sample("message" => "google.com") do
       insist { subject.get("tld")["tld"] } == "com"
+      insist { subject.get("tld")["top_level_domain"] } == "com"
       insist { subject.get("tld")["sld"] } == "google"
       insist { subject.get("tld")["trd"] } == nil
       insist { subject.get("tld")["domain"] } == "google.com"
@@ -36,6 +37,7 @@ describe LogStash::Filters::Tld do
 
     sample("message" => "google.co.uk") do
       insist { subject.get("tld")["tld"] } == "co.uk"
+      insist { subject.get("tld")["top_level_domain"] } == "co.uk"
       insist { subject.get("tld")["sld"] } == "google"
       insist { subject.get("tld")["trd"] } == nil
       insist { subject.get("tld")["domain"] } == "google.co.uk"
@@ -44,6 +46,7 @@ describe LogStash::Filters::Tld do
 
     sample("message" => "www.google.com") do
       insist { subject.get("tld")["tld"] } == "com"
+      insist { subject.get("tld")["top_level_domain"] } == "com"
       insist { subject.get("tld")["sld"] } == "google"
       insist { subject.get("tld")["trd"] } == "www"
       insist { subject.get("tld")["domain"] } == "google.com"
