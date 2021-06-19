@@ -29,6 +29,8 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
   def register
     # Add instance variables 
     require 'public_suffix'
+    # force the list to be initialised.
+    PublicSuffix::List.default
   end # def register
 
   public
