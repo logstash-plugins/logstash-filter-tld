@@ -35,7 +35,8 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
   def filter(event)
 
     if @source and PublicSuffix.valid?(event.get(@source), default_rule: nil)
-      domain = PublicSuffix.parse(event.get(@source))
+      source_field = event.get(@source)
+      domain = PublicSuffix.parse(source_field)
       # Replace the event message with our message as configured in the
       # config file.
       h = event.get(@target) 
@@ -45,6 +46,15 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
       h['trd'] = domain.trd
       h['domain'] = domain.domain
       h['subdomain'] = domain.subdomain
+      if source_field == domain.subdomain
+        domainsplit = source_field.split('.')
+        if domainsplit.length > 2 
+            subdom = domainsplit[1, domainsplit.length].join('.')
+            if subdom != domain.tld
+              h['subdomain']=subdom
+            end
+        end
+      end
       h['top_level_domain'] = domain.tld
       event.set(@target, h)
 
