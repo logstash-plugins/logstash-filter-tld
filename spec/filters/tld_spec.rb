@@ -53,5 +53,14 @@ describe LogStash::Filters::Tld do
       insist { subject.get("tld")["subdomain"] } == "www.google.com"
     end
 
+    sample("message" => "host.subdomain.example.com") do
+      insist { subject.get("tld")["tld"] } == "com"
+      insist { subject.get("tld")["top_level_domain"] } == "com"
+      insist { subject.get("tld")["sld"] } == "example"
+      insist { subject.get("tld")["trd"] } == "host.subdomain"
+      insist { subject.get("tld")["domain"] } == "example.com"
+      insist { subject.get("tld")["subdomain"] } == "subdomain.example.com"
+    end
+
   end
 end
