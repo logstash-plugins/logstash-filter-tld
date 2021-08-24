@@ -38,7 +38,8 @@ class LogStash::Filters::Tld < LogStash::Filters::Base
       domain = PublicSuffix.parse(event.get(@source))
       # Replace the event message with our message as configured in the
       # config file.
-      h = Hash.new
+      h = event.get(@target) 
+      h = Hash.new if h.nil?
       h['tld'] = domain.tld
       h['sld'] = domain.sld
       h['trd'] = domain.trd

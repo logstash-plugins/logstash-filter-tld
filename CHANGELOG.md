@@ -1,3 +1,6 @@
+## 3.2.0
+  - Do not overwrite existing object in event (e.g. make it possible to read from [source][nmae] and write to [source])
+
 ## 3.1.1
   - Honor ECS and add top_level_domain
 
