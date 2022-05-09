@@ -1,5 +1,5 @@
 ## 3.1.2
-- Fix race condition initializing PublicSuffix list [#8](https://github.com/logstash-plugins/logstash-filter-tld/issues/8)
+  - Fix race condition initializing PublicSuffix list [#8](https://github.com/logstash-plugins/logstash-filter-tld/issues/8)
 
 ## 3.1.1
   - Honor ECS and add top_level_domain
