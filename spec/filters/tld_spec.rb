@@ -1,57 +1,85 @@
-require "logstash/devutils/rspec/spec_helper"
-require "insist"
-require "logstash/filters/tld"
+require 'logstash/devutils/rspec/spec_helper'
+require 'logstash/filters/tld'
 
 describe LogStash::Filters::Tld do
-  describe "Set to TLD" do
-    config <<-CONFIG
-      filter {
-        tld {
-        }
-      }
-    CONFIG
+  let(:config) { {} }
 
-#{
-#       "message" => "google.com",
-#      "@version" => "1",
-#    "@timestamp" => "2015-01-22T17:33:19.669Z",
-#          "host" => "homer",
-#      "sequence" => 0,
-#           "tld" => {
-#              "tld" => "com",
-#              "sld" => "google",
-#              "trd" => nil,
-#           "domain" => "google.com",
-#        "subdomain" => nil
-#    }
+  subject(:plugin) { described_class.new(config) }
 
+  let(:event) { LogStash::Event.new('message' => 'www.google.com') }
 
-    sample("message" => "google.com") do
-      insist { subject.get("tld")["tld"] } == "com"
-      insist { subject.get("tld")["top_level_domain"] } == "com"
-      insist { subject.get("tld")["sld"] } == "google"
-      insist { subject.get("tld")["trd"] } == nil
-      insist { subject.get("tld")["domain"] } == "google.com"
-      insist { subject.get("tld")["subdomain"] } == nil
+  before(:each) { plugin.register }
+
+  shared_examples 'sets tld fields' do |source, target|
+    let(:config) { {'source' => source, 'target' => target } }
+
+    context 'domain without subdomains' do
+      it 'should set tld fields' do
+        expect_tld_event_fields(target, LogStash::Event.new(source => 'google.com'), {
+                                  'tld' => 'com',
+                                  'top_level_domain' => 'com',
+                                  'sld' => 'google',
+                                  'trd' => nil,
+                                  'domain' => 'google.com',
+                                  'subdomain' => nil
+                                })
+
+        expect_tld_event_fields(target, LogStash::Event.new(source => 'google.co.uk'), {
+                                  'tld' => 'co.uk',
+                                  'top_level_domain' => 'co.uk',
+                                  'sld' => 'google',
+                                  'trd' => nil,
+                                  'domain' => 'google.co.uk',
+                                  'subdomain' => nil
+                                })
+      end
     end
 
-    sample("message" => "google.co.uk") do
-      insist { subject.get("tld")["tld"] } == "co.uk"
-      insist { subject.get("tld")["top_level_domain"] } == "co.uk"
-      insist { subject.get("tld")["sld"] } == "google"
-      insist { subject.get("tld")["trd"] } == nil
-      insist { subject.get("tld")["domain"] } == "google.co.uk"
-      insist { subject.get("tld")["subdomain"] } == nil
-    end
+    context 'domain with subdomains' do
+      it 'should set tld fields' do
+        expect_tld_event_fields(target, LogStash::Event.new(source => 'www.google.com'), {
+                                  'tld' => 'com',
+                                  'top_level_domain' => 'com',
+                                  'sld' => 'google',
+                                  'trd' => 'www',
+                                  'domain' => 'google.com',
+                                  'subdomain' => 'www.google.com'
+                                })
 
-    sample("message" => "www.google.com") do
-      insist { subject.get("tld")["tld"] } == "com"
-      insist { subject.get("tld")["top_level_domain"] } == "com"
-      insist { subject.get("tld")["sld"] } == "google"
-      insist { subject.get("tld")["trd"] } == "www"
-      insist { subject.get("tld")["domain"] } == "google.com"
-      insist { subject.get("tld")["subdomain"] } == "www.google.com"
+        expect_tld_event_fields(target, LogStash::Event.new(source => 'foo.bar.google.es'), {
+                                  'tld' => 'es',
+                                  'top_level_domain' => 'es',
+                                  'sld' => 'google',
+                                  'trd' => 'foo.bar',
+                                  'domain' => 'google.es',
+                                  'subdomain' => 'foo.bar.google.es'
+                                })
+      end
     end
+  end
 
+  context 'with default configuration' do
+    include_examples('sets tld fields', 'message', 'tld')
+  end
+
+  context 'with `source` option configured' do
+    include_examples('sets tld fields', 'another_source', 'tld')
+  end
+
+  context 'with `target` option configured' do
+    include_examples('sets tld fields', 'message', 'another_tld')
+  end
+
+  context 'with `source` and `target` options configured' do
+    include_examples('sets tld fields', 'another_source', 'another_tld')
+  end
+
+  private
+
+  def expect_tld_event_fields(target, event, hash)
+    subject.filter(event)
+    hash.each do |key, value|
+      expect(event.get(target)[key]).to eq(value)
+    end
   end
 end
