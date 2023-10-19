@@ -1,3 +1,6 @@
+## 3.1.3
+  - Bumped `public_suffix` gem version to `> 4` `< 6` and updated specs [#24](https://github.com/logstash-plugins/logstash-filter-tld/issues/24)
+
 ## 3.1.2
   - Fix race condition initializing PublicSuffix list [#8](https://github.com/logstash-plugins/logstash-filter-tld/issues/8)
 

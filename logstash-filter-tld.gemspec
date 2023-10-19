@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'logstash-filter-tld'
-  s.version         = '3.1.2'
+  s.version         = '3.1.3'
   s.licenses = ['Apache-2.0']
   s.summary = "Replaces the contents of the default message field with whatever you specify in the configuration"
   s.description     = "This gem is a Logstash plugin required to be installed on top of the Logstash core pipeline using $LS_HOME/bin/logstash-plugin install gemname. This gem is not a stand-alone program"
@@ -17,14 +17,14 @@ Gem::Specification.new do |s|
   # Special flag to let us know this is actually a logstash plugin
   s.metadata = { "logstash_plugin" => "true", "logstash_group" => "filter" }
 
-  # public_suffix 3.x+ includes ruby syntax from 2.1
-  # This effectively requires Logstash >= 6.x
-  s.required_ruby_version = '>= 2.1.0'
+  # Logstash 7.17.x-8.x uses ruby 2.5-3.1 compatiblity
+  # public_suffix 4.x+ includes ruby syntax from 2.3
+  # public_suffix 5.x+ includes ruby syntax from 2.6
+  s.required_ruby_version = '>= 2.3'
 
   # Gem dependencies
   s.add_runtime_dependency "logstash-core-plugin-api", ">= 1.60", "<= 2.99"
-  s.add_runtime_dependency 'public_suffix', '~>3'
+  s.add_runtime_dependency 'public_suffix', '> 4', '< 6'
 
   s.add_development_dependency 'logstash-devutils'
-  s.add_development_dependency 'insist'
 end
